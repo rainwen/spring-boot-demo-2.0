@@ -1,17 +1,18 @@
 package com.rainwen.data.elasticsearch.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author rain.wen
  * @since 2018/7/23 18:50
  */
-@Document(indexName = "weibo", type = "weibo_signin", shards = 2)
-public class WeiboSignin implements Serializable {
+@Mapping()
+@Document(indexName = "weibo", type = "weibo_checkin", shards = 2)
+public class WeiboCheckin implements Serializable {
 
     /**
      * POI序号
@@ -21,23 +22,17 @@ public class WeiboSignin implements Serializable {
     /**
      * 地点名
      */
-    private String title;
+    private String placename;
+
     /**
-     * 地址
+     * 地名
      */
     private String address;
     /**
-     * 经度
-     */
-    private String lon;
-    /**
-     * 纬度
-     */
-    private String lat;
-    /**
      * 城市代码
      */
-    private String city;
+    private String cityCode;
+
     /**
      * POI类别代码
      */
@@ -51,6 +46,19 @@ public class WeiboSignin implements Serializable {
      */
     private Integer photoNum;
 
+    /**
+     * 地理位置经纬度
+     * lat纬度，lon经度 "40.715,-74.011"
+     */
+    @GeoPointField
+    private Location location;
+
+    /**
+     * 创建时间
+     */
+    @Field(type = FieldType.Long)
+    private Long createTime;
+
     public String getPoiId() {
         return poiId;
     }
@@ -59,12 +67,12 @@ public class WeiboSignin implements Serializable {
         this.poiId = poiId;
     }
 
-    public String getTitle() {
-        return title;
+    public String getPlacename() {
+        return placename;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setPlacename(String placename) {
+        this.placename = placename;
     }
 
     public String getAddress() {
@@ -75,28 +83,12 @@ public class WeiboSignin implements Serializable {
         this.address = address;
     }
 
-    public String getLon() {
-        return lon;
+    public String getCityCode() {
+        return cityCode;
     }
 
-    public void setLon(String lon) {
-        this.lon = lon;
-    }
-
-    public String getLat() {
-        return lat;
-    }
-
-    public void setLat(String lat) {
-        this.lat = lat;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
     }
 
     public String getCategoryName() {
@@ -123,18 +115,33 @@ public class WeiboSignin implements Serializable {
         this.photoNum = photoNum;
     }
 
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
+    }
+
     @Override
     public String toString() {
         return "WeiboSignin{" +
                 "poiId='" + poiId + '\'' +
-                ", title='" + title + '\'' +
+                ", placename='" + placename + '\'' +
                 ", address='" + address + '\'' +
-                ", lon='" + lon + '\'' +
-                ", lat='" + lat + '\'' +
-                ", city='" + city + '\'' +
+                ", cityCode='" + cityCode + '\'' +
                 ", categoryName='" + categoryName + '\'' +
                 ", checkinNum=" + checkinNum +
                 ", photoNum=" + photoNum +
+                ", location=" + location +
                 '}';
     }
 }

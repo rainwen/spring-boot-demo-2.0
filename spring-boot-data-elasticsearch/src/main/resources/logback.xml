@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration scan="true" scanPeriod="5 seconds">
+	<include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+	<include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+	<property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}spring.log}"/>
+	<property name="LOG_TEMP_PATH" value="${LOG_TEMP_PATH:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}}"/>
+
+	<appender name="ROLLIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_FILE}</file>
+		<encoder>
+			<pattern>${FILE_LOG_PATTERN}</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+	</appender>
+    
+    <!-- 出错日志 appender  -->  
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_TEMP_PATH}/error.log</file>
+		<encoder>
+			<pattern>${FILE_LOG_PATTERN}</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_TEMP_PATH}/error.log.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印错误日志 -->  
+            <level>ERROR</level>  
+            <onMatch>ACCEPT</onMatch>  
+            <onMismatch>DENY</onMismatch>  
+        </filter>
+    </appender>
+
+	<!-- INFO日志 appender  -->
+	<appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_TEMP_PATH}/info.log</file>
+		<encoder>
+			<pattern>${FILE_LOG_PATTERN}</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_TEMP_PATH}/info.log.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+
+	<logger name="com.rainwen" level="DEBUG" />
+
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="ROLLIN" />
+		<appender-ref ref="ERROR" />
+		<appender-ref ref="INFO" />
+	</root>
+</configuration>

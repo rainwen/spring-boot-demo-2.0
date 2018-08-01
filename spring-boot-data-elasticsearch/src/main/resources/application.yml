@@ -6,4 +6,10 @@ spring:
             properties:
                 path:
                   logs: /opt/elasticsearch/log #elasticsearch日志存储目录
-                  data: /opt/elasticsearch/data #elasticsearch数据存储目录
+                  data: /opt/elasticsearch/data
+logging:
+  config: classpath:logback.xml
+  path: ./logs #当前目录
+  level:
+    com:
+      rainwen: debug
