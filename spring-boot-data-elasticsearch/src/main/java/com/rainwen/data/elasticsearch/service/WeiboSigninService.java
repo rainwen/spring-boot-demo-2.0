@@ -51,14 +51,32 @@ public interface WeiboSigninService {
      */
     void deleteAll();
 
-
+    /**
+     * id查询
+     * @param id
+     */
     void deleteById(String id);
 
 
     /**
-     *
+     * id查询
      * @param id
      */
     WeiboCheckin findById(String id);
+
+    /**
+     * 查询签到次数最多前N条
+     * @param topN
+     * @return
+     */
+    List<WeiboCheckin> findByCheckinNumDescTopN(int topN);
+
+    /**
+     * 按地址查询签到次数降序前N条
+     * @param placeName
+     * @param topN
+     * @return
+     */
+    List<WeiboCheckin> findByPlaceNameOrderByCheckinNumDesc(String placeName, int topN);
 
 }

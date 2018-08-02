@@ -1,0 +1,5 @@
+{
+    "refresh_interval": "120s", //索引刷新时间
+    "number_of_shards": 2, //2个分片
+    "number_of_replicas": 1 //1个副本，后续可调整
+}

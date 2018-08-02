@@ -4,14 +4,18 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author rain.wen
  * @since 2018/7/23 18:50
  */
-@Mapping()
-@Document(indexName = "weibo", type = "weibo_checkin", shards = 2)
+
+/**
+ * 索引初始化配置
+ */
+@Setting(settingPath = "/es/settings.json")
+@Mapping(mappingPath = "/es/mappings.json")
+@Document(indexName = "weibo", type = "weibo_checkin")
 public class WeiboCheckin implements Serializable {
 
     /**
@@ -22,7 +26,7 @@ public class WeiboCheckin implements Serializable {
     /**
      * 地点名
      */
-    private String placename;
+    private String placeName;
 
     /**
      * 地名
@@ -34,7 +38,7 @@ public class WeiboCheckin implements Serializable {
     private String cityCode;
 
     /**
-     * POI类别代码
+     * POI类别
      */
     private String categoryName;
     /**
@@ -67,12 +71,12 @@ public class WeiboCheckin implements Serializable {
         this.poiId = poiId;
     }
 
-    public String getPlacename() {
-        return placename;
+    public String getPlaceName() {
+        return placeName;
     }
 
-    public void setPlacename(String placename) {
-        this.placename = placename;
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
     }
 
     public String getAddress() {
@@ -135,7 +139,7 @@ public class WeiboCheckin implements Serializable {
     public String toString() {
         return "WeiboSignin{" +
                 "poiId='" + poiId + '\'' +
-                ", placename='" + placename + '\'' +
+                ", placeName='" + placeName + '\'' +
                 ", address='" + address + '\'' +
                 ", cityCode='" + cityCode + '\'' +
                 ", categoryName='" + categoryName + '\'' +

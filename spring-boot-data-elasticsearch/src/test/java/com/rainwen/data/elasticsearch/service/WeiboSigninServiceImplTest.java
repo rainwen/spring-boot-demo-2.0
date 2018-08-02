@@ -20,6 +20,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * 为Elasticsearch添加中文分词，对比分词器效果
+ * http://keenwon.com/1404.html
+ *
  * @author rain.wen
  * @since 2018/7/24 0:02
  */
@@ -32,7 +35,7 @@ public class WeiboSigninServiceImplTest extends BaseTest {
     public void save() {
         WeiboCheckin weiboCheckin = new WeiboCheckin();
         weiboCheckin.setPoiId("001001");
-        weiboCheckin.setPlacename("车公庙KFC");
+        weiboCheckin.setPlaceName("车公庙KFC");
         weiboCheckin.setCategoryName("guangdong");
         weiboCheckin.setAddress("广东省深圳市福田区车公庙丰盛町C区负一层");
         Location location = new Location(22.541749, 114.031106);
@@ -47,7 +50,7 @@ public class WeiboSigninServiceImplTest extends BaseTest {
         for (int i = 0; i < 10; i++) {
             WeiboCheckin weiboCheckin = new WeiboCheckin();
             weiboCheckin.setPoiId("1001" + RandomStringUtils.randomNumeric(5));
-            weiboCheckin.setPlacename("车公庙KFC");
+            weiboCheckin.setPlaceName("车公庙KFC");
             weiboCheckin.setCategoryName("aaa");
             weiboCheckin.setCityCode("0755");
             weiboCheckin.setAddress("广东省深圳市福田区车公庙丰盛町C区负一层");
@@ -87,6 +90,21 @@ public class WeiboSigninServiceImplTest extends BaseTest {
     }
 
     @Test
+    public void findCheckinNumTopN() {
+        int topN = 10;
+        List<WeiboCheckin> weiboCheckinList = weiboSigninService.findByCheckinNumDescTopN(topN);
+        Assert.assertTrue(weiboCheckinList.size() <= topN);
+    }
+
+    @Test
+    public void findByPlaceNameOrderByCheckinNumDesc() {
+        int topN = 10;
+        String placeName = "酒店";
+        List<WeiboCheckin> weiboCheckinList = weiboSigninService.findByPlaceNameOrderByCheckinNumDesc(placeName, topN);
+        Assert.assertTrue(weiboCheckinList.size() <= topN);
+    }
+
+    @Test
     public void deleteAll() {
         weiboSigninService.deleteAll();
     }
@@ -122,7 +140,7 @@ public class WeiboSigninServiceImplTest extends BaseTest {
             try {
                 WeiboCheckin weiboCheckin = new WeiboCheckin();
                 weiboCheckin.setPoiId(data[0]);
-                weiboCheckin.setPlacename(data[1]);
+                weiboCheckin.setPlaceName(data[1]);
                 weiboCheckin.setAddress(data[2]);
                 Double lat = Double.valueOf(data[4]);
                 Double lon = Double.valueOf(data[3]);

@@ -3,11 +3,16 @@ package com.rainwen.data.elasticsearch.service;
 import com.rainwen.data.elasticsearch.model.WeiboCheckin;
 import com.rainwen.data.elasticsearch.repository.WeiboSigninRepository;
 import org.elasticsearch.common.unit.DistanceUnit;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
+import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -101,9 +106,46 @@ public class WeiboSigninServiceImpl implements WeiboSigninService {
     @Override
     public WeiboCheckin findById(String id) {
         Optional<WeiboCheckin> optionalWeiboCheckin = weiboSigninRepository.findById(id);
-        if(optionalWeiboCheckin.isPresent()) {
+        if (optionalWeiboCheckin.isPresent()) {
             return optionalWeiboCheckin.get();
         }
         return null;
+    }
+
+    /**
+     * 查询签到次数最多前多少名
+     *
+     * @param topN
+     * @return
+     */
+    @Override
+    public List<WeiboCheckin> findByCheckinNumDescTopN(int topN) {
+        Pageable pageable = PageRequest.of(0, topN);
+        //构建原生查询对象
+        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withPageable(pageable);
+        //按签到次数降序
+        SortBuilder sortBuilder = SortBuilders.fieldSort("checkinNum").order(SortOrder.DESC);
+        SearchQuery searchQuery = nativeSearchQueryBuilder.withSort(sortBuilder).build();
+        return elasticsearchTemplate.queryForList(searchQuery, WeiboCheckin.class);
+    }
+
+    /**
+     * 按地址查询签到次数降序前N条
+     *
+     * @param placeName
+     * @param topN
+     * @return
+     */
+    @Override
+    public List<WeiboCheckin> findByPlaceNameOrderByCheckinNumDesc(String placeName, int topN) {
+        Pageable pageable = PageRequest.of(0, topN);
+        //查询条件
+        QueryBuilder queryBuilder = new MatchQueryBuilder("placename", placeName);
+
+        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withFilter(queryBuilder).withPageable(pageable);
+        //按签到次数降序
+        SortBuilder sortBuilder = SortBuilders.fieldSort("checkinNum").order(SortOrder.DESC);
+        SearchQuery searchQuery = nativeSearchQueryBuilder.withSort(sortBuilder).build();
+        return elasticsearchTemplate.queryForList(searchQuery, WeiboCheckin.class);
     }
 }

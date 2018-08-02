@@ -1,0 +1,11 @@
+{
+    "weibo_checkin": {  //索引类型
+      "properties": {
+        "placeName": {"type":"text", "analyzer":"ik_max_word"}, //定义类型和分词器
+        "address": { "type": "text", "analyzer":"ik_max_word"},
+        "poiId":{"type":"keyword"},
+        "categoryName":{"type":"keyword"},
+        "cityCode":{"type":"keyword"}
+      }
+    }
+}
