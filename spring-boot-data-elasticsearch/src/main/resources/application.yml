@@ -1,8 +1,11 @@
+server:
+  port: 8888 # 端口
+
 spring:
    data:
         elasticsearch:
             cluster-name: es-cluster #默认为elasticsearch
-            cluster-nodes: es-node1.rainwen:9300,es-node2.rainwen:9300 #配置es节点信息，逗号分隔，如果没有指定，则启动ClientNode（9200端口是http查询使用的。9300集群使用。这里使用9300.）
+            cluster-nodes: es-node1.rainwen:9300 #es-node2.rainwen:9300 #配置es节点信息，逗号分隔，如果没有指定，则启动ClientNode（9200端口是http查询使用的。9300集群使用。这里使用9300.）
             properties:
                 path:
                   logs: /opt/elasticsearch/log #elasticsearch日志存储目录
