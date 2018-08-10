@@ -1,33 +1,42 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    <title>百度地图API显示多个标注点带提示的代码</title>
+    <title>查看签到数据演示</title>
     <meta charset="UTF-8">
     <!--css-->
     <style type="text/css">
         body { margin: 0; font-family: "Helvetica,Arial,FreeSans"; color: #000000; font-size: 12px; }
         .demo_main {padding: 10px 20px 20px;}
-        .demo_title { padding: 10px; margin-bottom: 10px; background-color: #D3D8E0; border: solid 1px gray; }
+        .demo_title { padding: 10px; margin-bottom: 10px; background-color: #D3D8E0; border: solid 1px gray; font-size: xx-large}
         .demo_content { padding: 10px; margin-bottom: 10px; border: solid 1px gray; }
         fieldset { border: 1px solid gray; }
+        a {color: blue;font-weight: bold;font-size: x-large;}
+        .op span {margin-left: 30px}
     </style>
     <!--javascript-->
-    <script src="http://www.w3school.com.cn/jquery/jquery.js" type="text/javascript"></script>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.js" type="text/javascript"></script>
 </head>
 <body>
 <div class="demo_main">
     <fieldset class="demo_title">
-        百度地图API显示多个标注点带提示的代码
+        查看签到数据演示
     </fieldset>
+    <div class="op">
+        <span><a href="javascript:search(1);">按距离最近查询前10条</a></span>
+        <span><a href="javascript:search(0);">按地名搜索签到次数最多前10条</a></span>
+    </div>
+
     <fieldset class="demo_content">
-        <div style="min-height: 400px; width: 100%;" id="map">
+        <div style="min-height: 600px; width: 100%;" id="map">
         </div>
         <script type="text/javascript">
+            var api = "http://127.0.0.1:8888";
+
             var markerArr = [
-                { title: "名称：广州火车站", point: "113.264531,23.157003", address: "广东省广州市广州火车站", tel: "12306" },
-                { title: "名称：广州塔（赤岗塔）", point: "113.330934,23.113401", address: "广东省广州市广州塔（赤岗塔） ", tel: "18500000000" },
-                { title: "名称：广州动物园", point: "113.312213,23.147267", address: "广东省广州市广州动物园", tel: "18500000000" },
-                { title: "名称：天河公园", point: "113.372867,23.134274", address: "广东省广州市天河公园", tel: "18500000000" }
+                { placeName: "名称：广州火车站", location:{"lat":23.157003,"lon":113.264531}, address: "广东省广州市广州火车站", categoryName: "三星级宾馆", checkinNum:"1", photoNum: "2"},
+                { placeName: "名称：广州塔（赤岗塔）", location:{"lat":23.113401,"lon":113.330934}, address: "广东省广州市广州塔（赤岗塔） ", categoryName: "二星级宾馆" , checkinNum:"1", photoNum: "2"},
+                { placeName: "名称：广州动物园", location:{"lat":23.147267,"lon":113.312213}, address: "广东省广州市广州动物园", categoryName: "四星级宾馆" , checkinNum:"1", photoNum: "2"},
+                { placeName: "名称：天河公园", location:{"lat":23.134274,"lon":113.372867}, address: "广东省广州市天河公园", categoryName: "五星级宾馆" , checkinNum:"1", photoNum: "2"}
             ];
 
             var map; //Map实例
@@ -60,8 +69,8 @@
 
                 //第7步：绘制点
                 for (var i = 0; i < markerArr.length; i++) {
-                    var p0 = markerArr[i].point.split(",")[0];
-                    var p1 = markerArr[i].point.split(",")[1];
+                    var p0 = markerArr[i].location.lon;
+                    var p1 = markerArr[i].location.lat;
                     var maker = addMarker(new window.BMap.Point(p0, p1), i);
                     addInfoWindow(maker, markerArr[i], i);
                 }
@@ -82,7 +91,7 @@
             // 添加信息窗口
             function addInfoWindow(marker, poi) {
                 //pop弹窗标题
-                var title = '<div style="font-weight:bold;color:#CE5521;font-size:14px">' + poi.title + '</div>';
+                var title = '<div style="font-weight:bold;color:#CE5521;font-size:14px">' + poi.placeName + '</div>';
                 //pop弹窗信息
                 var html = [];
                 html.push('<table cellspacing="0" style="table-layout:fixed;width:100%;font:12px arial,simsun,sans-serif"><tbody>');
@@ -91,8 +100,15 @@
                 html.push('<td style="vertical-align:top;line-height:16px">' + poi.address + ' </td>');
                 html.push('</tr>');
                 html.push('<tr>');
-                html.push('<td style="vertical-align:top;line-height:16px;width:38px;white-space:nowrap;word-break:keep-all">电话:</td>');
-                html.push('<td style="vertical-align:top;line-height:16px">' + poi.tel + ' </td>');
+                html.push('<td style="vertical-align:top;line-height:16px;width:38px;white-space:nowrap;word-break:keep-all">分类:</td>');
+                html.push('<td style="vertical-align:top;line-height:16px">' + poi.categoryName + ' </td>');
+                html.push('</tr>');
+                html.push('<tr>');
+                html.push('<td style="vertical-align:top;line-height:16px;width:38px;white-space:nowrap;word-break:keep-all">签到:</td>');
+                html.push('<td style="vertical-align:top;line-height:16px;padding-left: 20px;">' + poi.checkinNum + '次 </td>');
+                html.push('</tr>');
+                html.push('<td style="vertical-align:top;line-height:16px;width:38px;white-space:nowrap;word-break:keep-all">图片签到:</td>');
+                html.push('<td style="vertical-align:top;line-height:16px;padding-left: 20px;">' + poi.photoNum + '次 </td>');
                 html.push('</tr>');
 
                 html.push('</tbody></table>');
@@ -112,6 +128,36 @@
                 document.body.appendChild(load);
             }
             window.onload = map_load;
+
+            function search(type) {
+                if(type == 0) {
+                    var placeName = "公园";
+                    var topN = 100;
+                    var url = api + "/search?placeName=" + placeName +"&topN=" + topN;
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        dataType: "json",
+                        success : function(data) {
+                            markerArr = data;
+                            map_init();
+                        }
+                    });
+                } else if(type == 1) {
+                    var lon = "113.312213";
+                    var lat = "23.147267";
+                    var topN = 100;
+                    var url = api + "/searchNearby?lon=" + lon + "&lat=" +lat+ "&topN=" + topN;
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        dataType: "json",
+                        success : function(data) {
+                            console.log(data);
+                        }
+                    });
+                }
+             }
         </script>
     </fieldset>
 </div>

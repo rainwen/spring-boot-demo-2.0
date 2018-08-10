@@ -139,7 +139,7 @@ public class WeiboCheckinServiceImpl implements WeiboCheckinService {
     public List<WeiboCheckin> findByPlaceNameOrderByCheckinNumDesc(String placeName, int topN) {
         Pageable pageable = PageRequest.of(0, topN);
         //查询条件
-        QueryBuilder queryBuilder = new MatchQueryBuilder("placename", placeName);
+        QueryBuilder queryBuilder = new MatchQueryBuilder("placeName", placeName);
 
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withFilter(queryBuilder).withPageable(pageable);
         //按签到次数降序

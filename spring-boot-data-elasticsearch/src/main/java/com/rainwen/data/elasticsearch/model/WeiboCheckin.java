@@ -29,7 +29,7 @@ public class WeiboCheckin implements Serializable {
     private String placeName;
 
     /**
-     * 地名
+     * 地址
      */
     private String address;
     /**

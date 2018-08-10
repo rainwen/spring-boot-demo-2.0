@@ -40,8 +40,8 @@ public class SearchController {
      * @return
      */
     @RequestMapping("/searchNearby")
-    public List<WeiboCheckin> searchNearby(@RequestParam(name = "lat") Double lat,
-                                           @RequestParam(name = "lon") Double lon,
+    public List<WeiboCheckin> searchNearby(@RequestParam(name = "lon") Double lon,
+                                           @RequestParam(name = "lat") Double lat,
                                            @RequestParam(name = "topN", defaultValue = "10") Integer topN) {
         Pageable page = PageRequest.of(0, topN);
 
