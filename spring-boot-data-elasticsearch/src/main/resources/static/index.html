@@ -31,12 +31,11 @@
         </div>
         <script type="text/javascript">
             var api = "http://127.0.0.1:8888";
+            var lon = 113.261817;
+            var lat = 23.153985;
 
             var markerArr = [
-                { placeName: "名称：广州火车站", location:{"lat":23.157003,"lon":113.264531}, address: "广东省广州市广州火车站", categoryName: "三星级宾馆", checkinNum:"1", photoNum: "2"},
-                { placeName: "名称：广州塔（赤岗塔）", location:{"lat":23.113401,"lon":113.330934}, address: "广东省广州市广州塔（赤岗塔） ", categoryName: "二星级宾馆" , checkinNum:"1", photoNum: "2"},
-                { placeName: "名称：广州动物园", location:{"lat":23.147267,"lon":113.312213}, address: "广东省广州市广州动物园", categoryName: "四星级宾馆" , checkinNum:"1", photoNum: "2"},
-                { placeName: "名称：天河公园", location:{"lat":23.134274,"lon":113.372867}, address: "广东省广州市天河公园", categoryName: "五星级宾馆" , checkinNum:"1", photoNum: "2"}
+                { placeName: "名称：广州火车站", location:{"lat":lat,"lon":lon}, address: "广东省广州市广州火车站", categoryName: "火车站", checkinNum:"1", photoNum: "2"}
             ];
 
             var map; //Map实例
@@ -131,22 +130,21 @@
 
             function search(type) {
                 if(type == 0) {
-                    var placeName = "公园";
-                    var topN = 100;
+                    var placeName = "酒店";
+                    var topN = 10;
                     var url = api + "/search?placeName=" + placeName +"&topN=" + topN;
                     $.ajax({
                         type: "GET",
                         url: url,
                         dataType: "json",
                         success : function(data) {
+                            console.log(data);
                             markerArr = data;
                             map_init();
                         }
                     });
                 } else if(type == 1) {
-                    var lon = "113.312213";
-                    var lat = "23.147267";
-                    var topN = 100;
+                    var topN = 10;
                     var url = api + "/searchNearby?lon=" + lon + "&lat=" +lat+ "&topN=" + topN;
                     $.ajax({
                         type: "GET",
@@ -154,6 +152,8 @@
                         dataType: "json",
                         success : function(data) {
                             console.log(data);
+                            markerArr = data;
+                            map_init();
                         }
                     });
                 }

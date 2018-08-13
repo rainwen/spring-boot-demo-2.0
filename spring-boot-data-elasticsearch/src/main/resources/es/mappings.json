@@ -5,7 +5,8 @@
         "address": { "type": "text", "analyzer":"ik_max_word"},
         "poiId":{"type":"keyword"},
         "categoryName":{"type":"keyword"},
-        "cityCode":{"type":"keyword"}
+        "cityCode":{"type":"keyword"},
+        "location":{"type": "geo_point"}
       }
     }
 }
